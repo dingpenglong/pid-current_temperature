@@ -1,0 +1,97 @@
+#ifndef __TPS546D24A_H__
+#define __TPS546D24A_H__
+
+#include "stm32l4xx_hal.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+//寄存器列表
+typedef enum _Tps546d24a_RegList
+{
+    OPERATION    =    0x01,
+    ON_OFF_CONFIG   = 0x02,
+    CLEAR_FAULTS    = 0x03,
+    PHASE       =     0x04,
+    WRITE_PROTECT=    0x10,
+    STORE_USER_ALL=   0x15,
+    RESTORE_USER_ALL =0x16,
+    CAPABILITY = 0x19,
+    SMBALERT_MASK = 0x1b,
+    VOUT_MODE =0x20,
+    VOUT_COMMAND =0x21,
+    VOUT_TRIM =0x22,
+    VOUT_MAX =0x24,
+    VOUT_MARGIN_HIGH =0x25,
+    VOUT_MARGIN_LOW =0x26,
+    VOUT_TRANSITION_RATE =0x27,
+   
+    
+   //所有寄存器
+}Tps546d24a_RegList_t;
+
+
+
+//01h OPERATION寄存器
+typedef union
+ {
+ struct
+    {
+        uint8_t ON_OFF         : 1;  //  启用/禁用电源转换   当 (02h) ON_OFF_CONFIG 命令配置为需要来自 CMD 位的输入以控制输出时 0 禁用  1启用  
+        uint8_t SOFT_OFF      : 1;   //  关闭引脚       当 (02h) ON_OFF_CONFIG 命令配置为需要来自 CMD 位的输入以控制输出时 0立即关闭 1软关闭 
+        uint8_t MARGIN     : 4;     //设置裕度状态  根据输出电压，是否忽略OV/UV故障
+        uint8_t            :2;      
+    };
+    
+    uint8_t data;
+    
+}Tps546d24a_OPERATION;
+  
+
+
+//02h  ON_OFF_CONFIG寄存器
+
+typedef union
+ {
+ struct
+    {
+        uint8_t        : 3;
+        uint8_t PU     : 1;   //0:无论 CONTROL 引脚的状态如何，只要存在输入电源，单元就会启动电源转换。 1:对CONTROL 执行操作。(01h) OPERATION 命令用于启动和/或停止电源转换。
+        uint8_t CMD     : 1; //0b：忽略用于启动/停止电源转换的 (01h) OPERATION 命令。1b：对用于启动/停止电源转换的 (01h) OPERATION 命令（和 CONTROL 引脚 - 如果 CP 已配置该引脚）执行操作。
+        uint8_t CP     : 1;//0b：忽略用于启动/停止电源转换的 CONTROL 引脚。忽略 CONTROL 引脚时，EN/UVLO 引脚的 UVLO 功能不激活。1b：对用于启动/停止电源转换的 CONTROL 引脚（和 (01h) OPERATION 命令 - 如果位 [3] 已配置该命令）执行操作。
+        uint8_t   POLARITY         :1;  //0b：CONTROL 引脚具有低电平有效极性  1b：CONTROL 引脚具有高电平有效极性。
+        uint8_t  DELAY    :1;  // 0:在 (64h) TOFF_DELAY 时间内进行调节  1:当 CONTROL 引脚命令关闭电源转换时，立即停止电源转换。
+    };
+       //对于 (02h) ON_OFF_CONFIG，器件引脚 EN/UVLO 是 CONTROL 引脚。
+    uint8_t data;
+    
+}Tps546d24a_ON_OFF_CONFIG;
+
+
+
+
+typedef union
+ {
+ struct
+    {
+        uint8_t ON_OFF         : 1;
+        uint8_t SOFT_OFF      : 1;
+        uint8_t MARGIN     : 4;
+        uint8_t            :2;
+    };
+    
+    uint8_t data;
+    
+}Tps546d24a_CLEAR_FAULTS;
+
+
+
+
+#ifdef __cplusplus
+}
+#endif
+
+
+
+#endif   /* __TPS546D24A_H__*/
+
+
